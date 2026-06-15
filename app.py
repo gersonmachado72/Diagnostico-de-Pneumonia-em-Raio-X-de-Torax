@@ -175,7 +175,7 @@ if uploaded_file is not None:
                 cam = grad_cam(img_tensor, target_class=1)
                 overlay_img = overlay_heatmap(image, cam)
                 st.subheader("🔍 Mapa de Atenção (Grad-CAM)")
-                st.image(overlay_img, caption="Regiões mais relevantes para a classe 'Pneumonia'", use_container_width=True)
+                st.image(overlay_img, caption="Regiões mais relevantes para a classe 'Pneumonia'", width="stretch")
                 st.caption("Áreas em vermelho/amarelo indicam maior influência na decisão do modelo.")
 
                 # Interpretação clínica
