@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.Python
+venv/
+env/
+ENV/
+.venv
+
+# Modelos (grandes)
+*.pth
+*.pt
+*.h5
+*.ckpt
+
+# Dados
+*.nii.gz
+*.jpg
+*.jpeg
+*.png
+*.zip
+
+# IDE
+.vscode/
+.idea/
+.DS_Store
+*.swp
+
+# Logs
+streamlit.log
+.pytest_cache/
+diagnostico_raio_x_funcional.py

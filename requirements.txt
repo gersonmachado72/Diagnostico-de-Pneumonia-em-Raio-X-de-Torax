@@ -1,0 +1,9 @@
+streamlit
+torch
+torchvision
+pillow
+numpy
+opencv-python
+nibabel
+torchio
+monai
