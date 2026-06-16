@@ -3,12 +3,14 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torchvision import transforms, models
+import torchvision.models.densenet
 from PIL import Image
 import numpy as np
 import cv2
 import os
 import gdown
 from datetime import datetime
+
 
 # Forçar CPU (elimina tentativas de CUDA)
 torch.set_default_device('cpu')
@@ -31,6 +33,7 @@ def get_model():
     device = torch.device("cpu")
     model = models.densenet121(weights=None)
     model.classifier = nn.Linear(model.classifier.in_features, 2)
+    torch.serialization.add_safe_globals([torchvision.models.densenet.DenseNet])
     state_dict = torch.load(MODEL_PATH, map_location=device)
     model.load_state_dict(state_dict)
     model.eval()
