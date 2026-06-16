@@ -34,7 +34,7 @@ def get_model():
     model = models.densenet121(weights=None)
     model.classifier = nn.Linear(model.classifier.in_features, 2)
     torch.serialization.add_safe_globals([torchvision.models.densenet.DenseNet])
-    state_dict = torch.load(MODEL_PATH, map_location=device)
+    state_dict = torch.load(MODEL_PATH, map_location=device, weights_only=False)
     model.load_state_dict(state_dict)
     model.eval()
     return model, device
