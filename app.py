@@ -16,7 +16,7 @@ torch.set_default_device('cpu')
 # ------------------------------------------------------------
 # Download automático do modelo do Google Drive (opcional)
 # ------------------------------------------------------------
-MODEL_ID = "SEU_ID_AQUI"  # Substitua pelo ID do seu arquivo no Drive
+MODEL_ID = "1ige7GRnmKNcNFdg9axxUnpVsbKcoQQgj"  # Substitua pelo ID do seu arquivo no Drive
 MODEL_PATH = "pneumonia_weights.pth"
 
 @st.cache_resource
