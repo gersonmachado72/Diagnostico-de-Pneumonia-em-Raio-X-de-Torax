@@ -23,19 +23,19 @@ MODEL_PATH = "pneumonia_weights.pth"
 
 @st.cache_resource
 def get_model():
-    """Baixa o modelo se não existir e carrega em CPU."""
     if not os.path.exists(MODEL_PATH):
-        url = f"https://drive.google.com/uc?id={MODEL_ID}"
+        url = f"https://drive.google.com/uc?export=download&id={MODEL_ID}"
         with st.spinner("Baixando modelo da nuvem (primeira execução)..."):
-            gdown.download(url, MODEL_PATH, quiet=False)
+            import requests
+            response = requests.get(url, stream=True)
+            with open(MODEL_PATH, 'wb') as f:
+                for chunk in response.iter_content(chunk_size=8192):
+                    f.write(chunk)
         st.success("✅ Modelo baixado com sucesso!")
 
     device = torch.device("cpu")
-    model = models.densenet121(weights=None)
-    model.classifier = nn.Linear(model.classifier.in_features, 2)
-    torch.serialization.add_safe_globals([torchvision.models.densenet.DenseNet])
-    state_dict = torch.load(MODEL_PATH, map_location=device, weights_only=False)
-    model.load_state_dict(state_dict)
+    # Carrega o modelo completo (arquitetura + pesos)
+    model = torch.load(MODEL_PATH, map_location=device, weights_only=False)
     model.eval()
     return model, device
 
