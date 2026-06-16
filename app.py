@@ -24,17 +24,31 @@ MODEL_PATH = "pneumonia_weights.pth"
 @st.cache_resource
 def get_model():
     if not os.path.exists(MODEL_PATH):
-        url = f"https://drive.google.com/uc?export=download&id={MODEL_ID}"
+        # Baixa usando gdown (que já lida com confirmação)
+        url = f"https://drive.google.com/uc?id={MODEL_ID}"
         with st.spinner("Baixando modelo da nuvem (primeira execução)..."):
-            import requests
-            response = requests.get(url, stream=True)
-            with open(MODEL_PATH, 'wb') as f:
-                for chunk in response.iter_content(chunk_size=8192):
-                    f.write(chunk)
+            try:
+                import gdown
+                gdown.download(url, MODEL_PATH, quiet=False)
+            except Exception as e:
+                st.error(f"Erro ao baixar com gdown: {e}. Tentando método alternativo...")
+                # Fallback: requests com confirmação manual
+                import requests
+                session = requests.Session()
+                response = session.get(url, stream=True)
+                # Verifica se há confirmação necessária
+                if 'confirm' in response.url:
+                    confirm_token = response.url.split('confirm=')[1].split('&')[0]
+                    download_url = f"https://drive.google.com/uc?export=download&id={MODEL_ID}&confirm={confirm_token}"
+                    response = session.get(download_url, stream=True)
+                with open(MODEL_PATH, 'wb') as f:
+                    for chunk in response.iter_content(chunk_size=8192):
+                        if chunk:
+                            f.write(chunk)
         st.success("✅ Modelo baixado com sucesso!")
 
+    # Carrega o modelo completo
     device = torch.device("cpu")
-    # Carrega o modelo completo (arquitetura + pesos)
     model = torch.load(MODEL_PATH, map_location=device, weights_only=False)
     model.eval()
     return model, device
